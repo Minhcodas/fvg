@@ -1,3 +1,4 @@
+from urllib.request import urlopen, Request
 import requests
 import time
 from bs4 import BeautifulSoup
@@ -15,8 +16,10 @@ login_data = {
 }
 with requests.Session() as s:
     url = 'https://www.fshare.vn/site/login'
-    r = s.get(url, headers = headers)
-    soup = BeautifulSoup(r.content, 'html.parser')
+    req = Request(url,headers = headers)
+    webpage = urlopen(req).read()
+    #r = s.get(url, headers = headers)
+    soup = BeautifulSoup(webpage, 'html.parser')
     login_data['_csrf-app'] = soup.find('input', attrs={'name':'_csrf-app'})['value']
     print('Connecting account ...')
     r = s.post(url, data= login_data,headers=headers)
